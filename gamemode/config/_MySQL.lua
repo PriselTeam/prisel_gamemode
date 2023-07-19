@@ -1,0 +1,9 @@
+RP_MySQLConfig = {}
+RP_MySQLConfig.EnableMySQL = true
+RP_MySQLConfig.Host = "109.122.198.111"
+RP_MySQLConfig.Username = "prisel_v3"
+RP_MySQLConfig.Password = "P[kUbSp]L7N1-D1V"
+RP_MySQLConfig.Database_name = "prisel_v3"
+RP_MySQLConfig.Database_port = 3306
+RP_MySQLConfig.Preferred_module = "mysqloo"
+RP_MySQLConfig.MultiStatements = false
