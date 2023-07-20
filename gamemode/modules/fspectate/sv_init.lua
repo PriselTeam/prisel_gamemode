@@ -58,7 +58,6 @@ local function startSpectating(ply, target)
     net.Send(ply)
 
     local targetText = IsValid(target) and target:IsPlayer() and (target:Nick() .. " (" .. target:SteamID() .. ")") or IsValid(target) and "an entity" or ""
-    ply:ChatPrint("You are now spectating " .. targetText)
     hook.Call("FSpectate_start", nil, ply, target)
 end
 
@@ -67,7 +66,6 @@ local function Spectate(ply, cmd, args)
         if not b then ply:ChatPrint("No Access!") return end
 
         local target = findPlayer(args[1])
-        if target == ply then ply:ChatPrint("Invalid target!") return end
 
         startSpectating(ply, target)
     end)

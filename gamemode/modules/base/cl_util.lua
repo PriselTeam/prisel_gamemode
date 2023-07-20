@@ -94,14 +94,12 @@ end
 --[[---------------------------------------------------------------------------
 Key name to key int mapping
 ---------------------------------------------------------------------------]]
-local keyNames
-function input.KeyNameToNumber(str)
-    if not keyNames then
-        keyNames = {}
-        for i = 1, 107, 1 do
-            keyNames[input.GetKeyName(i)] = i
-        end
-    end
+local keyNames = {}
+for i = 1, 107, 1 do
+    local keyName = input.GetKeyName(i) or ""
+    keyNames[keyName] = i
+end
 
+function input.KeyNameToNumber(str)
     return keyNames[str]
 end

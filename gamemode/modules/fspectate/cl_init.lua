@@ -358,7 +358,7 @@ local function drawHelp()
 
         draw.RoundedBox(2, x, y - 6, 12, 12, team.GetColor(ply:Team()))
         draw.WordBox(2, x, y - 66, ply:Nick(), "UiBold", uiBackground, uiForeground)
-        draw.WordBox(2, x, y - 46, "Health: " .. ply:Health(), "UiBold", uiBackground, uiForeground)
+        draw.WordBox(2, x, y - 46, "VV: " .. ply:Health(), "UiBold", uiBackground, uiForeground)
         draw.WordBox(2, x, y - 26, ply:GetUserGroup(), "UiBold", uiBackground, uiForeground)
     end
 
