@@ -1,13 +1,3 @@
-/*
- * -------------------------
- * • Fichier: cl_opti.lua
- * • Projet: p_lib
- * • Création : Tuesday, 18th July 2023 11:39:09 pm
- * • Auteur : Ekali
- * • Modification : Tuesday, 18th July 2023 11:39:09 pm
- * • Destiné à Prisel.fr en V3
- * -------------------------
- */
 -- Bucket's Optimizations | https://steamcommunity.com/sharedfiles/filedetails/?id=1620875048
 function _PRSOpti()
   RunConsoleCommand("gmod_mcore_test", "1")

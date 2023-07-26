@@ -1,13 +1,3 @@
-/*
- * -------------------------
- * • Fichier: sv_opti.lua
- * • Projet: p_lib
- * • Création : Tuesday, 18th July 2023 11:43:51 pm
- * • Auteur : Ekali
- * • Modification : Tuesday, 18th July 2023 11:43:51 pm
- * • Destiné à Prisel.fr en V3
- * -------------------------
- */
  local function antiWidget(ent)
 	if ent:IsWidget() then
 		hook.Add("PlayerTick", "TickWidgets", function(pl, mv)
@@ -18,3 +8,17 @@
 end
 
 hook.Add("OnEntityCreated", "PriselV3::WidgetInit", antiWidget)
+
+util.AddNetworkString("PriselV3::PlayerAdmin")
+
+net.Receive("PriselV3::PlayerAdmin", function(_, ply)
+	local action = net.ReadUInt(2)
+
+
+	if action == 1 then
+		if not ply:PIsStaff() then return end
+		local bool = net.ReadBool()
+		if ply:HasAdminMode() == bool then return end
+		ply:SetAdminMode(bool)
+	end
+end)

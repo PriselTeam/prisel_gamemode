@@ -1,13 +1,3 @@
-/*
- * -------------------------
- * • Fichier: sh_functions.lua
- * • Projet: p_lib
- * • Création : Sunday, 9th July 2023 4:52:03 pm
- * • Auteur : Ekali
- * • Modification : Saturday, 15th July 2023 12:48:07 am
- * • Destiné à Prisel.fr en V3
- * -------------------------
- */
 local DarkRP = DarkRP or {}
 DarkRP.Library = DarkRP.Library or {}
 
@@ -80,15 +70,27 @@ function DarkRP.Library.Await(condition, callback)
     end)
 end
 
-function DarkRP.Library.Delay(seconds)
-    local promise = Promise.New()
+function DarkRP.Library.Benchmark(iIterations, ...) -- Wasied
+    local tTests = {...}
+    local tResults = {}
 
-    timer.Simple(seconds, function()
-        promise:Resolve()
-    end)
+    for i, testFunc in ipairs(tTests) do
+        local startTime = SysTime()
+        for _ = 1, iIterations do testFunc() end
+        local endTime = SysTime()
+        tResults[i] = {endTime - startTime, i}
+    end
 
-    return promise
+    table.sort(tResults, function(a, b) return a[1] < b[1] end)
+
+    local fastestTime = tResults[1][1]
+    for i, result in ipairs(tResults) do
+        local testIndex, durationSeconds = result[2], result[1]
+        local slowerPercentage = math.Round((durationSeconds - fastestTime) / durationSeconds * 100, 2)
+        print(string.format("Test %d took %.4f seconds, %s%% slower than the fastest test", testIndex, durationSeconds, slowerPercentage))
+    end
 end
+
 
 local PLAYER = FindMetaTable("Player")
 
@@ -100,4 +102,29 @@ end
 function PLAYER:PIsStaff()
     if not IsValid(self) then return end
     return DarkRP.Config["StaffGroups"][self:GetUserGroup()]
+end
+
+function PLAYER:HasAdminMode()
+    if not IsValid(self) then return end
+    if not self:PIsStaff() then return false end
+    return self:GetNWBool("Prisel.AdminMode")
+end
+
+
+function PLAYER:SetAdminMode(bool)
+    if not IsValid(self) then return end
+    if not self:PIsStaff() then return end
+
+    if SERVER then
+        self:SetNWBool("Prisel.AdminMode", bool)
+    end
+
+    if CLIENT then
+        net.Start("PriselV3::PlayerAdmin")
+        net.WriteUInt(1, 2)
+        net.WriteBool(bool)
+        net.SendToServer()
+
+        print("Requested admin mode change")
+    end
 end

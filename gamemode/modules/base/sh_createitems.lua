@@ -857,7 +857,6 @@ function DarkRP.addToCategory(item, kind, cat)
         insertCategory(c.members, item)
         return
     end
-
     DarkRP.errorNoHalt(string.format([[The category of "%s" ("%s") does not exist!]], item.name, cat), 2, {
         "Make sure the category is created with DarkRP.createCategory.",
         "The category name is case sensitive!",

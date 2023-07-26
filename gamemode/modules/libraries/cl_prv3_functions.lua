@@ -1,14 +1,3 @@
-/*
- * -------------------------
- * • Fichier: cl_functions.lua
- * • Projet: p_lib
- * • Création : Sunday, 9th July 2023 4:52:03 pm
- * • Auteur : Ekali
- * • Modification : Sunday, 9th July 2023 11:51:07 pm
- * • Destiné à Prisel.fr en V3
- * -------------------------
- */
- 
 DarkRP = DarkRP or {}
 DarkRP.ScrW = ScrW()
 DarkRP.ScrH = ScrH()
@@ -229,4 +218,51 @@ function DarkRP.Library.FetchCDN(name)
             return installedMat[name].Material
         end
     end
+end
+
+function DarkRP.Library.DrawStencilMask(fcMask, fcRender, bInvert)
+
+    if not isfunction(fcMask) then return false end
+    if not isfunction(fcRender) then return false end
+
+    render.ClearStencil()
+    render.SetStencilEnable(true)
+
+    render.SetStencilWriteMask(1)
+    render.SetStencilTestMask(1)
+
+    render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
+    render.SetStencilPassOperation(bInvert and STENCILOPERATION_REPLACE or STENCILOPERATION_KEEP)
+    render.SetStencilZFailOperation(STENCILOPERATION_KEEP)
+    render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_NEVER)
+    render.SetStencilReferenceValue(1)
+
+    fcMask()
+
+    render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
+    render.SetStencilPassOperation(bInvert and STENCILOPERATION_REPLACE or STENCILOPERATION_KEEP)
+    render.SetStencilZFailOperation(STENCILOPERATION_KEEP)
+    render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_EQUAL)
+    render.SetStencilReferenceValue(bInvert and 0 or 1)
+
+    fcRender()
+
+    render.SetStencilEnable(false)
+    render.ClearStencil()
+
+end
+
+local Entity = FindMetaTable("Entity")
+
+function Entity:IsOnScreen()
+    if not self:IsPlayer() then return false end
+
+    local pos = self:GetPos() + Vector(0, 0, 72)
+    local screenPos = pos:ToScreen()
+
+    return screenPos.visible and screenPos.x > 0 and screenPos.x < ScrW() and screenPos.y > 0 and screenPos.y < ScrH() and not util.TraceLine({
+        start = LocalPlayer():EyePos(),
+        endpos = pos,
+        filter = {LocalPlayer(), self}
+    }).Hit
 end
