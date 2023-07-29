@@ -364,7 +364,6 @@ local allweapons = {
 ["weapon_physgun"] = true,
 ["weapon_physcannon"] = true,
 ["weapon_pistol"] = true,
-["weapon_stunstick"] = true,
 ["weapon_357"] = true,
 ["weapon_smg1"] = true,
 ["weapon_ar2"] = true,

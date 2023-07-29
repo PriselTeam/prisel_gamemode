@@ -16,7 +16,6 @@ DarkRP.disabledDefaults["modules"] = {
     ["hud"]              = false,
     ["hungermod"]        = true,
     ["playerscale"]      = false,
-    ["sleep"]            = false,
 }
 
 DarkRP.disabledDefaults["agendas"]          = {}

@@ -1,13 +1,15 @@
+util.AddNetworkString("darkrp_playerscale")
+
 local minHull = Vector(-16, -16, 0)
 
 local function setScale(ply, scale)
     ply:SetModelScale(scale, 0)
     ply:SetHull(minHull, Vector(16, 16, 72 * scale))
 
-    umsg.Start("darkrp_playerscale")
-    umsg.Entity(ply)
-    umsg.Float(scale)
-    umsg.End()
+    net.Start("darkrp_playerscale")
+    net.WriteEntity(ply)
+    net.WriteFloat(scale)
+    net.Send(ply)
 end
 
 local function onLoadout(ply)

@@ -28,6 +28,18 @@ function DarkRP.Library.DebugPrint(message, level)
     print(debugMessage)
 end
 
+function DarkRP.Library.FindPlayerByName(name)
+    local lowerName = string.lower(name)
+    for _, ply in ipairs(player.GetAll()) do
+        local lowerNick = string.lower(ply:Nick())
+        local lowerSteamID = string.lower(ply:SteamID())
+        if lowerNick == lowerName or lowerSteamID == lowerName then
+            return ply
+        end
+    end
+    return nil
+end
+
 DarkRP.Library.Promises = {}
 DarkRP.Library.PromiseCount = 0
 
@@ -91,6 +103,38 @@ function DarkRP.Library.Benchmark(iIterations, ...) -- Wasied
     end
 end
 
+function DarkRP.Library.IsValidReason(reason)
+    if not reason then return false end
+    if not isstring(reason) then return false end
+    return string.match(reason, "[a-zA-Z].*[a-zA-Z].*[a-zA-Z]") ~= nil
+end
+
+local time_units = {
+    {"an", 60 * 60 * 24 * 365},
+    {"mois", 60 * 60 * 24 * 30},
+    {"jour", 60 * 60 * 24},
+    {"heure", 60 * 60},
+    {"minute", 60},
+    {"seconde", 1},
+}
+
+function DarkRP.Library.FormatSeconds(seconds, abbreviate)
+    local result = {}
+
+    for _, unit in ipairs(time_units) do
+        local value = math.floor(seconds / unit[2])
+        if value > 0 then
+            local unit_label = abbreviate and unit[1]:sub(1, 1) or unit[1]
+            if not abbreviate and value > 1 then
+                unit_label = unit_label .. "s"  -- Add "s" for plural units when not abbreviated
+            end
+            table.insert(result, value .. " " .. unit_label)
+            seconds = seconds - (value * unit[2])
+        end
+    end
+
+    return #result > 0 and table.concat(result, " ") or "0 seconds"
+end
 
 local PLAYER = FindMetaTable("Player")
 
@@ -125,6 +169,6 @@ function PLAYER:SetAdminMode(bool)
         net.WriteBool(bool)
         net.SendToServer()
 
-        print("Requested admin mode change")
+        surface.PlaySound("buttons/button14.wav")
     end
 end

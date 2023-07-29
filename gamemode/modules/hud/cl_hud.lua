@@ -361,19 +361,9 @@ function GM:DrawDeathNotice(x, y)
 end
 
 local notificationSound = GM.Config.notificationSound
-local function DisplayNotify(msg)
-    local txt = msg:ReadString()
-    GAMEMODE:AddNotify(txt, msg:ReadShort(), msg:ReadLong())
-    surface.PlaySound(notificationSound)
 
-    -- Log to client console
-    MsgC(Color(255, 20, 20, 255), "[DarkRP] ", Color(200, 200, 200, 255), txt, "\n")
-end
-usermessage.Hook("_Notify", DisplayNotify)
-
-function GM:HUDDrawTargetID()
-    return false
-end
+function GAMEMODE:HUDDrawTargetID() return false end
+function GM:HUDDrawTargetID() return false end
 
 function GM:HUDPaint()
     localplayer = localplayer or LocalPlayer()

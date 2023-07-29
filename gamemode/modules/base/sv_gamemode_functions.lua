@@ -458,10 +458,6 @@ function GM:CanTool(ply, trace, mode)
 end
 
 function GM:CanPlayerSuicide(ply)
-    if ply.IsSleeping then
-        DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("unable", "suicide", ""))
-        return false
-    end
     if ply:isArrested() then
         DarkRP.notify(ply, 1, 4, DarkRP.getPhrase("unable", "suicide", ""))
         return false
@@ -577,9 +573,6 @@ end
 
 local adminCopWeapons = {
     ["door_ram"] = true,
-    ["arrest_stick"] = true,
-    ["unarrest_stick"] = true,
-    ["stunstick"] = true,
     ["weaponchecker"] = true,
 }
 function GM:PlayerCanPickupWeapon(ply, weapon)
@@ -838,11 +831,6 @@ function GM:PlayerSpawn(ply)
         SendUserMessage("blackScreen", ply, false)
     end
 
-    if GAMEMODE.Config.babygod and not ply.IsSleeping and not ply.Babygod then
-        enableBabyGod(ply)
-    end
-    ply.IsSleeping = false
-
     ply:Extinguish()
 
     for i = 0, 2 do
@@ -927,9 +915,6 @@ function GM:PlayerLoadout(ply)
         if not GAMEMODE.Config.AdminsCopWeapons then return end
 
         ply:Give("door_ram")
-        ply:Give("arrest_stick")
-        ply:Give("unarrest_stick")
-        ply:Give("stunstick")
         ply:Give("weaponchecker")
     end)
 
@@ -1009,10 +994,6 @@ function GM:PlayerDisconnected(ply)
 
     if isMayor and GAMEMODE.Config.shouldResetLaws then
         DarkRP.resetLaws()
-    end
-
-    if IsValid(ply.SleepRagdoll) then
-        ply.SleepRagdoll:Remove()
     end
 
     ply:keysUnOwnAll()
