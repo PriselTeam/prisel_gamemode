@@ -908,14 +908,6 @@ function GM:PlayerLoadout(ply)
     CAMI.PlayerHasAccess(ply, "DarkRP_GetAdminWeapons", function(access)
         if not access or not IsValid(ply) then return end
 
-        for _, v in pairs(GAMEMODE.Config.AdminWeapons) do
-            ply:Give(v)
-        end
-
-        if not GAMEMODE.Config.AdminsCopWeapons then return end
-
-        ply:Give("door_ram")
-        ply:Give("weaponchecker")
     end)
 
     ply:SwitchToDefaultWeapon()
