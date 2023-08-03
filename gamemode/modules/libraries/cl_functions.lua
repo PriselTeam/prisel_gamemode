@@ -131,13 +131,10 @@ function DarkRP.Library.DrawMulticolorText(font, x, y, xAlign, yAlign, ...)
     end
 end
 
-function DarkRP.Library.SoundURL(url)
-    if not url then return end
-
-    print("Playing " .. util.CRC(url))
-
-    sound.PlayURL(url, "", 
+function DarkRP.Library.SoundURL(sUrl)
+    sound.PlayURL(sUrl, "", 
     function(station)
+        print(type(station))
         if IsValid(station) then
             station:SetVolume(0.5)
             station:Play()
@@ -145,22 +142,44 @@ function DarkRP.Library.SoundURL(url)
     end)
 end
 
-function DarkRP.Library.MakeCirclePoly(centerX, centerY, radius, sides)
+function DarkRP.Library.MakeCirclePoly(iX, iY, iRadius, iSides)
     local poly = {}
 
-    local angleIncrement = (2 * math.pi) / sides
+    local iAngleIncrement = (2 * math.pi) / iSides
 
-    for i = 1, sides do
-        local angle = angleIncrement * i
-        local x = centerX + radius * math.cos(angle)
-        local y = centerY + radius * math.sin(angle)
+    for i = 1, iSides do
+        local iAngle = iAngleIncrement * i
+        local iX2 = iX + iRadius * math.cos(iAngle)
+        local iY2 = iY + iRadius * math.sin(iAngle)
 
-        table.insert(poly, { x = x, y = y })
+        table.insert(poly, { x = iX2, y = iY2 })
     end
 
     return poly
 end
-  
+
+function DarkRP.Library.DrawArc(x, y, ang, p, rad, color, seg)
+	seg = seg or 80
+	ang = (-ang) + 180
+	local circle = {}
+
+	table.insert(circle, {
+		x = x,
+		y = y
+	})
+	for i = 0, seg do
+		local a = math.rad((i / seg) * -p + ang)
+		table.insert(circle, {
+			x = x + math.sin(a) * rad,
+			y = y + math.cos(a) * rad
+		})
+	end
+
+	surface.SetDrawColor(color)
+	draw.NoTexture()
+	surface.DrawPoly(circle)
+end
+
 
 local installedMat = {}
 local pathCDN = "https://yaguxxxx.fr/PriselCDN/"
@@ -252,9 +271,9 @@ function DarkRP.Library.DrawStencilMask(fcMask, fcRender, bInvert)
 
 end
 
-local Entity = FindMetaTable("Entity")
+local ENTITY = FindMetaTable("Entity")
 
-function Entity:IsOnScreen()
+function ENTITY:IsOnScreen()
     if not self:IsPlayer() then return false end
 
     local pos = self:GetPos() + Vector(0, 0, 72)

@@ -11,7 +11,7 @@
 DarkRP = DarkRP or {}
 DarkRP.Config = DarkRP.Config or {}
 
-DarkRP.Config.DebugMode = true
+DarkRP.Config.DebugMode = false
 
 DarkRP.Config.StaffGroups = {
   ["superadmin"] = true,
