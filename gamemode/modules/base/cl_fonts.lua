@@ -145,14 +145,5 @@ local function loadFonts()
         font = "Akbar",
         extended = true,
     })
-
-    surface.CreateFont("DarkRP_tipjar", {
-        size = 100,
-        weight = 500,
-        antialias = true,
-        shadow = true,
-        font = "Verdana",
-        extended = true,
-    })
 end
 loadFonts()
