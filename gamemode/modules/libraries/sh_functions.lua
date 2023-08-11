@@ -40,48 +40,6 @@ function DarkRP.Library.FindPlayerByName(name)
     return nil
 end
 
-DarkRP.Library.Promises = {}
-DarkRP.Library.PromiseCount = 0
-
-local function AwaitCoroutine(hookName, condition, callback)
-    local framesPassed = 0
-
-    local function ThinkCallback()
-        framesPassed = framesPassed + 1
-
-        if condition() then
-            hook.Remove("Think", hookName)
-            callback()
-            DarkRP.Library.Promises[hookName] = nil
-        end
-    end
-
-    hook.Add("Think", hookName, ThinkCallback)
-end
-
-function DarkRP.Library.Await(condition, callback)
-    local hookName = "DarkRP.Library.Await_" .. tostring(DarkRP.Library.PromiseCount)
-
-    if condition() then
-        callback()
-        return
-    end
-
-    DarkRP.Library.PromiseCount = DarkRP.Library.PromiseCount + 1
-
-    local promiseData = {
-        condition = condition,
-        callback = callback,
-        hookName = hookName
-    }
-
-    DarkRP.Library.Promises[hookName] = promiseData
-
-    timer.Simple(0, function()
-        AwaitCoroutine(hookName, condition, callback)
-    end)
-end
-
 function DarkRP.Library.Benchmark(iIterations, ...) -- Wasied
     local tTests = {...}
     local tResults = {}

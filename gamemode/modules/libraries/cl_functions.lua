@@ -55,14 +55,14 @@ function DarkRP.Library.LerpAlphaColor(color, toA, t)
   return Color(color.r, color.g, color.b, color.a)
 end
 
-function DarkRP.Library.LerpColor(frameTime, color, colorTo)
-  return Color(
-      Lerp(frameTime, color.r, colorTo.r),
-      Lerp(frameTime, color.g, colorTo.g),
-      Lerp(frameTime, color.b, colorTo.b),
-      Lerp(frameTime, color.a, colorTo.a)
-  )
+function DarkRP.Library.Lerp2DPos(iFrac, tFrom, tTo)
+    return {x = Lerp(iFrac, tFrom.x, tTo.x), y = Lerp(iFrac, tFrom.y, tTo.y)}
 end
+
+
+function DarkRP.Library.LerpColor(iFrac, cFrom, cTo)
+    return LerpVector(iFrac, cFrom:ToVector(), cTo:ToVector()):ToColor()
+  end
 
 function DarkRP.Library.ColorNuance(color, percentage)
     if not IsColor(color) or not isnumber(percentage) then return color_white end
@@ -86,7 +86,6 @@ end
 
 function DarkRP.Library.DrawMaterialSwing(material, x, y, width, height, rotationRange, rotationSpeed, color)
     surface.SetDrawColor(color or color_white)
-    local material = material
     local rotation = math.sin(CurTime() * rotationSpeed) * rotationRange
 
     surface.SetMaterial(material)
@@ -156,6 +155,21 @@ function DarkRP.Library.MakeCirclePoly(iX, iY, iRadius, iSides)
     end
 
     return poly
+end
+
+function DarkRP.Library.DrawCircle(iX, iY, iRadius, iSeg)
+	local tCircle = {}
+
+	table.insert(tCircle, {x = iX, y = iY, u = 0.5, v = 0.5})
+	for i = 0, iSeg do
+		local a = math.rad(( i / iSeg) * -360)
+		table.insert(tCircle, {x = iX + math.sin(a) * iRadius, y = iY + math.cos(a) * iRadius, u = math.sin(a) / 2 + 0.5, v = math.cos(a) / 2 + 0.5})
+	end
+
+	local a = math.rad(0)
+	table.insert(tCircle, {x = iX + math.sin(a) * iRadius, y = iY + math.cos(a) * iRadius, u = math.sin(a) / 2 + 0.5, v = math.cos(a) / 2 + 0.5})
+
+	surface.DrawPoly(tCircle)
 end
 
 function DarkRP.Library.DrawArc(x, y, ang, p, rad, color, seg)
@@ -271,6 +285,14 @@ function DarkRP.Library.DrawStencilMask(fcMask, fcRender, bInvert)
 
 end
 
+function DarkRP.Library.ScaleX(iRatio)
+    return self.ScrW * (iRatio/1920)
+end
+
+function DarkRP.Library.ScaleY(iRatio)
+    return self.ScrH * (iRatio/1080)
+end
+
 local ENTITY = FindMetaTable("Entity")
 
 function ENTITY:IsOnScreen()
@@ -285,3 +307,38 @@ function ENTITY:IsOnScreen()
         filter = {LocalPlayer(), self}
     }).Hit
 end
+
+concommand.Add("getps", function(ply)
+    local pos, ang = ply:GetPos(), ply:GetAngles()
+    
+    print((
+        [[{
+            ["pos"] = Vector(%s, %s, %s),
+            ["ang"] = Angle(%s, %s, %s),
+        },]]
+    ):format(pos.x, pos.y, pos.z, ang.x, ang.y, ang.z))
+end)
+
+concommand.Add("rmvpnl", function(ply)
+    if IsValid(g_SpawnMenu) then
+        g_SpawnMenu:Hide()
+    end
+
+    if IsValid(g_ContextMenu) then
+        g_ContextMenu:Hide()
+    end
+
+    for k, v in ipairs(vgui.GetWorldPanel():GetChildren()) do
+        if not v:IsVisible() then continue end 
+
+        v:Remove()
+    end
+end)
+
+concommand.Add("printd", function()
+    local playerModels = player_manager.AllValidModels()
+    local vehiclesList = list.Get("Vehicles")
+
+    PrintTable(playerModels)
+    PrintTable(vehiclesList)
+end)
