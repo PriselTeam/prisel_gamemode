@@ -984,9 +984,9 @@ function GM:PlayerDisconnected(ply)
         DarkRP.unLockdown(ply)
     end
 
-    -- if isMayor and GAMEMODE.Config.shouldResetLaws then
-    --     DarkRP.resetLaws()
-    -- end
+    if isMayor and GAMEMODE.Config.shouldResetLaws then
+        DarkRP.resetLaws()
+    end
 
     ply:keysUnOwnAll()
     DarkRP.log(ply:Nick() .. " (" .. ply:SteamID() .. ") disconnected", Color(0, 130, 255))
